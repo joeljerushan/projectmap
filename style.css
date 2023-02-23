@@ -1,0 +1,16 @@
+body {
+    background-color: #f3f3f3;
+}
+.mapContainer {
+    width: 800px;
+    margin: 0 auto;
+}
+.selectWrap {
+    display: flex;
+}
+.selectWrap .singleItem {
+    flex: 1;
+}
+.selectWrap .singleItem ul li {
+    margin-bottom: 10px;
+}

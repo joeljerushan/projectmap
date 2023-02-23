@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+-->
+<html>
+  <head>
+    <title>Open Layers - Task 4</title>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    
+
+    <div class="mapContainer">
+      <h1><a href="../Index.html">Web Mapping</a></h1>
+
+      <div class="selectWrap">
+        <div class="singleItem">
+          <h4>Open Layers Mapping </h4>
+          <ul>
+            <li><a href="./Task1.html">Task 1</a></li>
+            <li><a href="./Task2.html">Task 2</a></li>
+            <li><a href="./Task3.html">Task 3</a></li>
+            <li><a href="./Task4.html">Task 4</a></li>
+            <li><a href="./Task5.html">Task 5</a></li>
+          </ul>
+        </div>
+        <div class="singleItem">
+          <h4>Leaflet Mapping </h4>
+          <ul>
+            <li><a href="./../Leaflet/Task1.html">Task 1</a></li>
+            <li><a href="./../Leaflet/Task2.html">Task 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>South wales and cardiff central location color differenciate </h3>
+      <div id="map" class="map" style=" width: 600px; height: 600px;"></div>
+    </div>
+    
+
+    <script type="text/javascript">
+         // Geometries
+         var point = new ol.geom.Point(
+          ol.proj.transform([-3.3820991650561893, 51.68593932185554,], 'EPSG:4326', 'EPSG:3857'),
+          100000
+      );
+      var circle = new ol.geom.Circle(
+          ol.proj.transform([-3.1790410247979897, 51.47605043044995], 'EPSG:4326', 'EPSG:3857'),
+          10000
+      );
+      var circleTwo = new ol.geom.Circle(
+          ol.proj.transform([-3.3820991650561893, 51.68593932185554,], 'EPSG:4326', 'EPSG:3857'),
+          10000
+      );
+
+      // Features
+      var pointFeature = new ol.Feature(point);
+      var circleFeature = new ol.Feature(circle);
+
+      // Source and vector layer
+      var vectorSource = new ol.source.Vector({
+          projection: 'EPSG:4326',
+          features: [pointFeature, circleFeature]
+      });
+
+      var style = new ol.style.Style({
+          fill: new ol.style.Fill({
+              color: 'rgba(255, 100, 50, 0.3)'
+          }),
+          stroke: new ol.style.Stroke({
+              width: 2,
+              color: 'rgba(255, 100, 50, 0.8)'
+          }),
+          image: new ol.style.Circle({
+              fill: new ol.style.Fill({
+                  color: 'rgba(55, 200, 150, 0.5)'
+              }),
+              stroke: new ol.style.Stroke({
+                  width: 2,
+                  color: 'rgba(55, 200, 150, 0.8)'
+              }),
+              radius: 30
+          }),
+      });
+
+      var vectorLayer = new ol.layer.Vector({
+          source: vectorSource,
+          style: style
+      });
+
+      // Maps
+      var map = new ol.Map({
+          target: 'map',  // The DOM element that will contains the map
+          renderer: 'canvas', // Force the renderer to be used
+          layers: [
+              // Add a new Tile layer getting tiles from OpenStreetMap source
+              new ol.layer.Tile({
+                  source: new ol.source.OSM()
+              }),
+              vectorLayer
+          ],
+          // Create a view centered on the specified location and zoom level
+          view: new ol.View({
+              center: ol.proj.transform([-3.1790410247979897, 51.47605043044995], 'EPSG:4326', 'EPSG:3857'),
+              zoom: 9
+          })
+      });
+  
+  
+    </script>
+  </body>
+</html>

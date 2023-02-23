@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+-->
+<html>
+  <head>
+    <title>Open Layers - Task 2</title>
+    <link rel="stylesheet" href="https://openlayersbook.github.io/openlayers_book_samples/assets/ol3/css/ol.css" type="text/css" />
+    <link rel="stylesheet" href="https://openlayersbook.github.io/openlayers_book_samples/assets/css/samples.css" type="text/css" />
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    
+    <div class="mapContainer">
+      <h1><a href="../Index.html">Web Mapping</a></h1>
+
+      <div class="selectWrap">
+        <div class="singleItem">
+          <h4>Open Layers Mapping </h4>
+          <ul>
+            <li><a href="./Task1.html">Task 1</a></li>
+            <li><a href="./Task2.html">Task 2</a></li>
+            <li><a href="./Task3.html">Task 3</a></li>
+            <li><a href="./Task4.html">Task 4</a></li>
+            <li><a href="./Task5.html">Task 5</a></li>
+          </ul>
+        </div>
+        <div class="singleItem">
+          <h4>Leaflet Mapping </h4>
+          <ul>
+            <li><a href="./../Leaflet/Task1.html">Task 1</a></li>
+            <li><a href="./../Leaflet/Task2.html">Task 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Mouse over event</h3>
+      <div id="map" class="map" style=" width: 600px; height: 600px; position: relative; ">
+        <div id="closestFeature" style="background-color: #f3f3f3; padding: 10px; position: absolute; bottom: 20px; left: 20px; font-weight: bold;">Please Mouseover any Country</div>
+      </div>
+  </div>
+
+    
+    <script src="https://openlayersbook.github.io/openlayers_book_samples/assets/ol3/js/ol.js"></script>
+
+    <script type="text/javascript">
+      var countries = new ol.layer.Vector({
+        source: new ol.source.GeoJSON({
+          projection: 'EPSG:3857',
+          url: 'https://openlayersbook.github.io/openlayers_book_samples/assets/data/countries.geojson'
+        })
+      });
+      var view = new ol.View({
+        projection: 'EPSG:3857'
+      });
+      var map = new ol.Map({
+        target: 'map',
+        layers: [countries],
+        view: view
+      });
+      
+      // zoom to the extent of the vector source once the map has been rendered
+      // for the first time
+      map.once('postrender', function() {
+        view.fitExtent(countries.getSource().getExtent(), map.getSize());
+      });
+      
+      // capture mouse move events so we can 'look' at the feature
+      // underneath the mouse
+      map.on('pointermove', onMouseMove);
+      
+      function onMouseMove(browserEvent) {
+        // the mousemove event sends a browser event object that contains
+        // the geographic coordinate the event happened at
+        var coordinate = browserEvent.coordinate;
+        // we can get the closest feature from the source
+        var feature = countries.getSource().getClosestFeatureToCoordinate(coordinate);
+        // to compute the area of a feature, we need to get it's geometry and do
+        // something a little different depeneding on the geometry type.
+        var geometry = feature.getGeometry();
+        var area;
+        switch (geometry.getType()) {
+          case 'MultiPolygon':
+            // for multi-polygons, we need to add the area of each polygon
+            area = geometry.getPolygons().reduce(function(left, right) {
+              return left + right.getArea();
+            }, 0);
+            break;
+          case 'Polygon':
+            // for polygons, we just get the area
+            area = geometry.getArea();
+            break;
+          default:
+            // no other geometry types have area as far as we are concerned
+            area = 0;
+        }
+        area = area / 1000000;
+        // display the country name and area now
+        var text = feature.getProperties().name + ' ' + area.toFixed(0) + ' km<sup>2</sup>';
+        document.getElementById('closestFeature').innerHTML = text;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+-->
+<html>
+  <head>
+    <title>Open Layers - Task 3</title>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    
+
+    <div class="mapContainer">
+      <h1><a href="../Index.html">Web Mapping</a></h1>
+
+      <div class="selectWrap">
+        <div class="singleItem">
+          <h4>Open Layers Mapping </h4>
+          <ul>
+            <li><a href="./Task1.html">Task 1</a></li>
+            <li><a href="./Task2.html">Task 2</a></li>
+            <li><a href="./Task3.html">Task 3</a></li>
+            <li><a href="./Task4.html">Task 4</a></li>
+            <li><a href="./Task5.html">Task 5</a></li>
+          </ul>
+        </div>
+        <div class="singleItem">
+          <h4>Leaflet Mapping </h4>
+          <ul>
+            <li><a href="./../Leaflet/Task1.html">Task 1</a></li>
+            <li><a href="./../Leaflet/Task2.html">Task 2</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Mouse Click events</h3>
+      <div id="map" class="map" style=" width: 600px; height: 600px;"></div>
+      <div id="overlay" style="background-color: white; border-radius: 10px; border: 1px solid black; padding: 5px 10px;">
+      </div>
+    </div>
+
+    
+
+    <script type="text/javascript">
+      var layer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      });
+      
+      var center = ol.proj.transform([-1.812, 52.443], 'EPSG:4326', 'EPSG:3857');
+      
+      var overlay = new ol.Overlay({
+        element: document.getElementById('overlay'),
+        positioning: 'bottom-center'
+      });
+      
+      var view = new ol.View({
+        center: center,
+        zoom: 6
+      });
+      
+      var map = new ol.Map({
+        target: 'map',
+        layers: [layer],
+        view: view
+      });
+      
+      // register an event handler for the click event
+      map.on('click', function(event) {
+        // extract the spatial coordinate of the click event in map projection units
+        var coord = event.coordinate;
+        // transform it to decimal degrees
+        var degrees = ol.proj.transform(coord, 'EPSG:3857', 'EPSG:4326');
+        // format a human readable version
+        var hdms = ol.coordinate.toStringHDMS(degrees);
+        // update the overlay element's content
+        var element = overlay.getElement();
+        element.innerHTML = hdms;
+        // position the element (using the coordinate in the map's projection)
+        overlay.setPosition(coord);
+        // and add it to the map
+        map.addOverlay(overlay);
+      });
+    </script>
+  </body>
+</html>

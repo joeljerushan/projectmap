@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+-->
+<html>
+  <head>
+    <title>Open Layers - Task 5</title>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    
+
+    <div class="mapContainer">
+        <h1><a href="../Index.html">Web Mapping</a></h1>
+  
+        <div class="selectWrap">
+          <div class="singleItem">
+            <h4>Open Layers Mapping </h4>
+            <ul>
+              <li><a href="./Task1.html">Task 1</a></li>
+              <li><a href="./Task2.html">Task 2</a></li>
+              <li><a href="./Task3.html">Task 3</a></li>
+              <li><a href="./Task4.html">Task 4</a></li>
+              <li><a href="./Task5.html">Task 5</a></li>
+            </ul>
+          </div>
+          <div class="singleItem">
+            <h4>Leaflet Mapping </h4>
+            <ul>
+              <li><a href="./../Leaflet/Task1.html">Task 1</a></li>
+              <li><a href="./../Leaflet/Task2.html">Task 2</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Differenciate mountains in wales with colors</h3>
+        <div id="map" class="map" style=" width: 600px; height: 600px;"></div>
+    </div>
+    
+
+    <script type="text/javascript">
+        const PicwsDu = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-3.7277007234573016, 51.882588311934505])),
+            name: 'Picws Du',
+          });
+          
+          const fanBryCheiniog = new ol.Feature({
+            geometry: new ol.geom.Point(ol.proj.fromLonLat([-3.7080935876947905, 51.883736526925205])),
+            name: 'Fan Brycheiniog',
+          });
+          
+          const map = new ol.Map({
+            target: 'map',
+            layers: [
+              new ol.layer.Tile({
+                source: new ol.source.OSM(),
+              }),
+              new ol.layer.Vector({
+                source: new ol.source.Vector({
+                  features: [PicwsDu, fanBryCheiniog]
+                }),
+                style: new ol.style.Style({
+                  image: new ol.style.Icon({
+                    anchor: [0.5, 46],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'pixels',
+                    src: 'https://openlayers.org/en/latest/examples/data/icon.png'
+                  })
+                })
+              })
+            ],
+            view: new ol.View({
+              center: ol.proj.fromLonLat([-3.7, 51.85]),
+              zoom: 12
+            })
+        });
+    </script>
+  </body>
+</html>
